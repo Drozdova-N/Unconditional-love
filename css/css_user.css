@@ -1,0 +1,33 @@
+#container_for_user_1{
+    margin-top: 5px;
+    width: 800px;
+    margin:10px auto;
+    background: #b1d0d7;
+    position: absolute;
+    left:5%;
+    opacity: 0.9;
+    top: 150px;
+
+}
+
+#container_for_user_2{
+    width: 750px;
+    margin:10px ;
+    background: #b1d0d7;
+    position: relative;
+    float: left;
+    opacity: 0.9;
+    border: 3px solid #7bb0ff;
+}
+
+input{
+    background: #b6e3ff;
+    border-radius:8px;
+    border: 3px solid #7bb0ff;
+    color: #0f0f0f;
+}
+
+.lable_up
+{
+    margin-top: -500px;
+}

@@ -1,0 +1,20 @@
+#container_for_news_1{
+    margin-top: 10px;
+    width: 1000px;
+    margin:10px auto;
+    background: #b1d0d7;
+    position: absolute;
+    left:10%;
+    opacity: 0.9;
+
+}
+
+#container_for_news_2{
+    width: 900px;
+    margin:10px ;
+    background: #b1d0d7;
+    position: relative;
+    float: left;
+    opacity: 0.9;
+    border: 3px solid #7bb0ff;
+}

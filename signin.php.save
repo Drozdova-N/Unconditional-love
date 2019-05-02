@@ -1,0 +1,164 @@
+<?php
+     
+    require 'database.php';
+ 
+    if ( !empty($_POST)) {
+        // keep track validation errors
+       
+        $emailError = null;
+        $passwordError = null;
+         
+        // keep track post values
+        $remember= $_POST['remember'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        
+         
+        // validate input
+        $valid = true;
+        
+         
+        if (empty($email)) {
+            $emailError = 'Please enter Email Address';
+            $valid = false;
+        } else if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
+            $emailError = 'Please enter a valid Email Address';
+            $valid = false;
+        }
+         
+        if (empty($password)) {
+            $passwordError = 'Please enter password';
+            $valid = false;
+        }
+         
+        // insert data
+        if ($valid) {
+            $pdo = Database::connect();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "Select name  from user where email=? AND  password=?";
+           $q=$pdo->prepaer($sql);
+
+//if ($q = $mysqli->prepare("SELECT name FROM user  WHERE email= and password=?"))
+            $q->bind_param('ss', $email, $password);
+            $q->execute(); 
+            $q->bind_result($name);
+            $q->fetch();    
+            //$s = $pdo->query($sql);
+            Database::disconnect();
+     if ($name->rowCount()==0) header("Location: signin.php");
+else 
+header("Location: users.php");
+$q->close();
+}
+ }
+  
+  
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link   href="css/bootstrap.min.css" rel="stylesheet">
+ <link   href="css/signin.css" rel="stylesheet">
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+ 
+<body class="text-center">
+
+    <form class="form-signin" action="signin.php" method="post" >
+      <img class="mb-4" src= "img/favicon.png" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      <label for="inputEmail" class="sr-only">Email address</label>
+      <input name="email"  type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus  action="create.php" method="post"value="<?php echo !empty($email)?$email:'';?>">
+                            <?php if (!empty($emailError)): ?>
+                                <span class="help-inline"><?php echo $emailError;?></span>
+                            <?php endif;?>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required   value="<?php echo !empty($password)?$password:'';?>"> 
+                            <?php if (!empty($passwordError)): ?>
+                                <span class="help-inline"><?php echo $passwordError;?></span>
+                            <?php endif; ?>
+      <div class="checkbox mb-3">
+        <label>
+          <input name="remember" type="checkbox" value="remember-me" checked="<?php echo $remember?'true':'false';?>"> Remember me</input>
+         
+        </label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+    </form>
+
+
+
+
+
+
+<!--    <div class="container">
+
+                <div class="span10 offset1">
+                    <div class="row">
+                        <h3>Create a User</h3>
+                    </div>
+
+
+             <form class="form-signin" action="create.php" method="post">
+ 
+       <input name="name" type="text"  class="form-control" placeholder="User Name" required autofocus  value="<?php echo !empty($name)?$name:'';?>">
+                            <?php if (!empty($nameError)): ?>
+                                <span class="help-inline"><?php echo $nameError;?></span>
+                            <?php endif; ?>   
+      <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" value="<?php echo !empty($email)?$email:'';?>">
+                            <?php if (!empty($emailError)): ?>
+                                <span class="help-inline"><?php echo $emailError;?></span>
+                            <?php endif;?>
+
+      <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required  value="<?php echo !empty($password)?$password:'';?>"> 
+                            <?php if (!empty($passwordError)): ?>
+                                <span class="help-inline"><?php echo $passwordError;?></span>
+                            <?php endif; ?>
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Create user</button>
+    </form> --> 
+                  <!--  <form class="form-signin form-horizontal" action="create.php" method="post">
+                      <div class="control-group <?php echo !empty($nameError)?'error':'';?>">
+                        <label class="control-label sr-only">Name</label>
+                        <div class="controls">
+                            <input class="form-control"   required autofocus  name="name" type="text"  placeholder="Name" value="<?php echo !empty($name)?$name:'';?>">
+                            <?php if (!empty($nameError)): ?>
+                                <span class="help-inline"><?php echo $nameError;?></span>
+                            <?php endif; ?>
+                        </div>
+                      </div>
+                      <div class="control-group <?php echo !empty($emailError)?'error':'';?>">
+                        <label class="control-label sr-only">Email Address</label>
+                        <div class="controls">
+                            <input name="email" type="text" placeholder="Email Address" value="<?php echo !empty($email)?$email:'';?>">
+                            <?php if (!empty($emailError)): ?>
+                                <span class="help-inline"><?php echo $emailError;?></span>
+                            <?php endif;?>
+                        </div>
+                      </div>
+                      <div class="control-group <?php echo !empty($passwordError)?'error':'';?>">
+                        <label class="control-label">Password</label>
+                        <div class="controls">
+                            <input name="password" type="password"  placeholder="Password" value="<?php echo !empty($password)?$password:'';?>">
+                            <?php if (!empty($passwordError)): ?>
+                                <span class="help-inline"><?php echo $passwordError;?></span>
+                            <?php endif;?>
+                        </div>
+                      </div>
+                    <br>
+                      <div class="form-actions">
+
+                          <button type="submit" class="btn btn-success">Create</button>
+                          <a class="btn btn-info" href="index.php">Back</a>
+                        </div>
+                    </form> --> 
+                </div>
+                 
+    </div> <!-- /container -->
+  </body>
+</html>
